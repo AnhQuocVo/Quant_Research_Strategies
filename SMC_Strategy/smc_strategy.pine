@@ -1,0 +1,89 @@
+//@version=6
+// =========================================================================================
+// SECTION 1: INTRODUCTION
+// =========================================================================================
+// This strategy aims to automate a trading approach based on Smart Money Concepts (SMC),
+// specifically using signals that mimic a Break of Structure (BOS) or a Change of
+// Character (CHoCH). It is designed as a stop-and-reverse system, meaning it will
+// close a long position when a short signal appears, and vice-versa.
+//
+// Based on user research, this script has shown favorable performance on the
+// ETH/USD pair on the 1-hour timeframe and Heikin Ashi Candles
+//
+strategy('SMC Strategy (Annotated)',
+  overlay = true,
+  margin_long = 100, margin_short = 100, // For futures/margin trading
+  default_qty_type = strategy.percent_of_equity,
+  default_qty_value = 10) // Uses 10% of equity for each trade
+
+// =========================================================================================
+// SECTION 2: BACKGROUND (SMC THEORY)
+// =========================================================================================
+// Smart Money Concepts (SMC) is a trading methodology focused on identifying the
+// footprints of institutional players ("smart money"). Key concepts include:
+// - Break of Structure (BOS): When price breaks a previous swing high in an uptrend
+//   or a swing low in a downtrend, confirming trend continuation.
+// - Change of Character (CHoCH): The first sign of a potential trend reversal, where
+//   price breaks the most recent minor structure against the prevailing trend.
+
+// =========================================================================================
+// SECTION 3: ASSUMPTION (THE PROXY)
+// =========================================================================================
+// The core assumption of THIS script is that a Simple Moving Average (SMA) crossover
+// can serve as a functional, albeit simplified, proxy for a BOS or CHoCH event.
+// - A fast SMA crossing over a slower one indicates a shift in momentum, which
+//   often accompanies a structural break in price action.
+// This is a simplification. A true SMC indicator would use complex pivot and price
+// action analysis, not just moving averages.
+
+// =========================================================================================
+// SECTION 4: RESULT (USER CONFIGURATION)
+// =========================================================================================
+// These inputs allow the user to toggle between different levels of market structure,
+// based on their research and risk appetite.
+useSwing = input.bool(true, 'Use Swing Structure (Major Trend)')
+useInternal = input.bool(false, 'Use Internal Structure (Minor Trend)')
+
+// =========================================================================================
+// SECTION 5: METHODOLOGY & CORE LOGIC
+// =========================================================================================
+// --- Signal Flags ---
+// We use 'var' to declare these boolean variables once, so their state persists
+// across all bars of the chart.
+var bool swingBull = false
+var bool swingBear = false
+var bool intBull = false   // 'int' stands for 'internal'
+var bool intBear = false
+
+// --- Signal Generation (The Placeholder Logic) ---
+// This is where we define what constitutes a bullish or bearish signal for each
+// structure type. We are using SMA crossovers as the placeholder.
+// A 20-period SMA is used for the slower, "swing" structure.
+swingBull := ta.crossover(close, ta.sma(close, 20))
+swingBear := ta.crossunder(close, ta.sma(close, 20))
+
+// A 10-period SMA is used for the faster, "internal" structure.
+intBull := ta.crossover(close, ta.sma(close, 10))
+intBear := ta.crossunder(close, ta.sma(close, 10))
+
+// --- Entry Rules ---
+// The strategy enters a long position if either the swing OR internal structure
+// gives a bullish signal (and the user has enabled that structure type).
+if (useSwing and swingBull) or (useInternal and intBull)
+    strategy.entry('Long', strategy.long)
+
+// The strategy enters a short position if either the swing OR internal structure
+// gives a bearish signal.
+if (useSwing and swingBear) or (useInternal and intBear)
+    strategy.entry('Short', strategy.short)
+
+// --- Exit Rules (Stop-and-Reverse) ---
+// The strategy closes any open long position if a bearish signal appears.
+// Note: Because the entry rule for a short is the same, this will immediately
+// open a short position, effectively "reversing" the trade.
+if (useSwing and swingBear) or (useInternal and intBear)
+    strategy.close('Long', comment = 'CHoCH/BOS Bear')
+
+// The strategy closes any open short position if a bullish signal appears.
+if (useSwing and swingBull) or (useInternal and intBull)
+    strategy.close('Short', comment = 'CHoCH/BOS Bull')
