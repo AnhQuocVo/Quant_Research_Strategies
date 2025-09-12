@@ -1,4 +1,4 @@
-# Quant Research Strategy Portfolio
+# Quant Research Strategy
 
 ##  Introduction  
 This repository was created to research and validate various **quantitative trading strategies** to answer:  
