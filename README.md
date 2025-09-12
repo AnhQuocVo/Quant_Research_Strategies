@@ -1,6 +1,6 @@
 # Quant Research Strategy Portfolio
 
-## 🏁 Introduction  
+##  Introduction  
 This repository was created to research and validate various **quantitative trading strategies** to answer:  
 > "Do these strategies actually generate sustainable profits, or are they just overhyped backtest results?"  
 
