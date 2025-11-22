@@ -54,7 +54,7 @@ While many parameter combinations still resulted in negative cumulative R-multip
 *   **REWARD_RATIO**: Higher `REWARD_RATIO` values (e.g., 2.5) were generally associated with better (or less negative) performance across sessions, reinforcing the benefit of favorable risk-reward setups when an edge exists.
 *   **RISK_PCT**: As consistently observed, `RISK_PCT` had no direct impact on the R-multiple performance, as R-multiples normalize profit/loss per unit of risk. It serves purely as a capital allocation parameter.
 
-![attemp2](AnhQuocVo/Quant_Research_Strategies/ORP_strategy/attemp2.png)
+![attemp2](attemp2.png)
 
 **Top 5 Performing Parameter Sets (Positive Cumulative R-Multiples):**
 
@@ -97,5 +97,6 @@ The ORB strategy, in its current form, is **not universally viable** across all 
 2.  **Integrate ADX as a Filter**: The calculated ADX indicator should be incorporated into the trading logic. For instance, trades could be filtered to only occur when ADX is above a certain threshold (e.g., 20 or 25) to confirm trending conditions and avoid false breakouts in sideways markets.
 3.  **Explore Dynamic Exits**: Investigate more sophisticated stop-loss and take-profit mechanisms, such as trailing stops, partial profit-taking, or adaptive time-based exits (e.g., exiting at the end of the New York session).
 4.  **Broader Data Analysis**: Consider expanding the backtesting period or applying the strategy to different assets to validate the findings and assess robustness.
+
 
 In summary, the journey from an unprofitable general strategy to a potentially viable, session-specific one highlights the power of detailed parameter optimization and market context analysis. The next logical step is to enhance the strategy's filtering capabilities using the ADX indicator.
